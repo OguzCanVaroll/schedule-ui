@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Header from './Header';
 import Day from './Day';
+import Todo from './Todo';
 import { getMonthMatrix } from '../utils/dateUtils';
 
 const Calendar = () => {
@@ -9,7 +10,7 @@ const Calendar = () => {
   const [currentYear, setCurrentYear] = useState(today.getFullYear()); // Yılı tut
 
   const monthData = getMonthMatrix(currentYear, currentMonth); // Ayın günlerini matris olarak al
-
+  const [isVisible, setIsVisible] = useState(false);
   return (
     <div className="p-4 max-w-5xl mx-auto ">
       {/* Üstteki başlık ve butonlar */}
@@ -29,10 +30,21 @@ const Calendar = () => {
         {/* 42 adet kutucuk (7 gün x 6 hafta) */}
         {monthData.map((week, i) =>
           week.map((dayObj, j) => (
-            <Day key={`${i}-${j}`} {...dayObj} currentMonth={currentMonth} />
+            <Day key= {`${i}-${j}`} 
+                      {...dayObj} 
+                      currentMonth={currentMonth}
+                      setIsVisible={setIsVisible} />
           ))
         )}
       </div>
+     {/* Modal gösterme alanı */}
+      
+      {isVisible && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center ">
+          <Todo closeModal={() => setIsVisible(false)} />
+        </div>
+      )}
+    
     </div>
   );
 };
