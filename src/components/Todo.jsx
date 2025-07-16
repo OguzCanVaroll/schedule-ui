@@ -18,7 +18,10 @@ const Todo = ({ closeModal }) => {
     updated[index].checked = !updated[index].checked;
     setItems(updated);
   };
-
+  
+  const removeItem = (itemToRemove) => {
+    setItems(items.filter(item => item !== itemToRemove));
+  };
   return (
     <div className="w-full max-w-80 sm:max-w-sm md:max-w-md h-7/12 bg-white rounded shadow p-6 px-5 relative flex flex-col items-center">
       
@@ -34,11 +37,15 @@ const Todo = ({ closeModal }) => {
       {/* Input + Add */}
       <div className="w-full flex items-center gap-2">
         <input
-          className="flex-1 px-2 py-1 my-2 border-2 border-gray-300 focus:outline-none rounded"
+          className="capitalize flex-1 px-2 py-1 my-2 border-2 border-gray-300 focus:outline-none rounded"
           type="text"
-          placeholder="Bir şey yaz..."
+          placeholder="Write Something.."
           value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
+          onChange={(e) => {
+            const val = e.target.value;
+            const formatted = val.charAt(0).toUpperCase() + val.slice(1);
+            setInputValue(formatted);
+          }}
           onKeyDown={(e) => e.key === 'Enter' && handleAdd()}
         />
         <button
@@ -50,7 +57,7 @@ const Todo = ({ closeModal }) => {
       </div>
 
       {/* Checklist */}
-      <div className="w-full mt-4 flex flex-col gap-3 px-5">
+      <div className="w-full mt-4 flex flex-col gap-3 px-5 overflow-y-auto">
         {items.map((item, index) => (
           <label key={index} className="flex items-center gap-2">
             <input
@@ -68,7 +75,7 @@ const Todo = ({ closeModal }) => {
                 <FaPen />
             </button>
             <button
-                onClick={closeModal}
+                onClick={() => removeItem(item)}
                 className="cursor-pointer px-2 py-2">
                 <FaTrash />
             </button>
